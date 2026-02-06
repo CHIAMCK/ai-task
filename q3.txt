@@ -1,0 +1,60 @@
+Q3: You are tasked to build an application that can summarize long documents in both
+English and Malay.
+
+How would you approach this problem? In your answer, cover:
+
+1. Preprocessing steps you’d consider,
+2. How you’d handle multilingual support (including possible code-switching),
+3. The approach for summarization (extractive vs abstractive, model choice, or LLM
+usage),
+4. How you would evaluate the quality of the summaries.
+
+
+1. Preprocessing steps
+- extract text from document
+- clean text by removing extra whitespace, new lines, to reduce input token
+- split text into chunks with overlap by using text splitter, for example RecursiveCharacterTextSplitter
+
+2. handle multilingual support (including possible code-switching), approach for summarization (extractive vs abstractive, model choice, or LLM
+usage)
+
+Idetify primary language
+- check first 3 chunks to identify the primary language. Choose model that knows Malay and English well for example, ILMU
+prompt:
+"Identify the primary language of this text. Return only the name of the language (e.g., 'English', 'Malay', Text: {text}"
+
+- summarize each chunk independently in primary language, using abstractive summarization rewrite it with same meaning, which can preserve meaning and concise
+
+prompt:
+"The input text may contain a mix of English and Malay. Provide a concise, abstractive summary in {language}.
+Text: {chunk}"
+
+- combine all the chunk summaries and summarize again, Force single-language output, remove redundancy
+
+prompt:
+"The following is a list of summaries for the same document:
+{summaries}
+
+Task:
+1. Combine these into a single, cohesive abstractive summary.
+2. REMOVE REDUNDANCY: If multiple summaries mention the same fact, include it only once.
+3. OUTPUT LANGUAGE: You must write the final summary entirely in {language}."
+
+- post processing, format (bullet points/ paragraphs ...)
+prompt:
+"You are a professional editor. Take the following summary and format it for a corporate report.
+
+final summary:
+{final_summary}
+
+FORMATTING RULES:
+1. Use a bold Title at the top.
+2. Provide a 2-3 sentence Overview paragraph
+3. Use a 'Key Takeaways' section with bullet points for the main facts.
+4. End with a 'Conclusion' paragraph.
+5. All output must be in {language}."
+
+
+3. How you would evaluate the quality of the summaries
+- Use prompt constraints (do not add new facts, summarize only provided text, preserve numbers and names)
+- LLM-as-a-Judge approach, use another LLM as evaluator to grade responses against specific criteria for example, factual accuracy, entity preservation, hallucination

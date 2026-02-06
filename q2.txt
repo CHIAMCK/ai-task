@@ -1,0 +1,73 @@
+Q2: You need to build a searchable knowledge base chatbot for customer support
+using an LLM.
+Outline, at a high level, how you would:
+1. Ingest documents,
+2. Store and retrieve them efficiently,
+3. Ensure fast and accurate answers to user queries.
+
+Using RAG (Retrieval-Augmented Generation) architecture
+
+1. Ingest documents
+- collect all the frequently asked questions in pdf files
+- extract data from files and do some text cleaning to remove extra whitespace
+- split up the text by each Q&A by using text splitter, for example RecursiveCharacterTextSplitter
+- calculate embeddings for each chunk using embedding model
+
+2. Store and retrieve them efficiently
+- store embeddings in vector DB, for example Pinecone, Chroma
+- when user sends question to chatbot, calculate embeddings for user's question
+- Do a similarity search with stored embeddings to find the ones most similar to the user's question
+- if there are many facts return, put the most relevant 1-3 facts into the prompt along with the user's question
+
+3. Ensure fast and accurate answers to user queries
+- use smaller model which generate tokens faster
+- implement streaming so the user sees text as it's generated
+- cache llm response using semantic caching which uses embeddings and similarity search to decide whether a new question is similar enough to a previous one
+- use LangSmith for tracing and evaluation
+- using prompt engineering
+
+system prompt:
+"You are a searchable knowledge base chatbot for customer support.
+Only use the provided context to answer. If the answer isn't in the context, say you don't know. Do not use outside knowledge."
+
+prompt:
+"Use the following Q&A to answer the user question: {q&a}
+Here is the user's question {question}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+problems:
+    1. load entire content
+    - longer prompt -->
+    - hallucination -->
+
+
+    - use text splitter to break down large file into smaller chunks
+    - calculate embeddings for each chunk
+    - store embeddings in vector DB
+
+
+
+
+
+
+
+
+    - response caching using semantic caching
+    - LangSmith for tracing and evaluation
+    - Use Streaming Responses
+    - Conversation Memory
+    - prompt engineering
+
