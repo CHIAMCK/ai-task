@@ -1,0 +1,143 @@
+Motivation & Ways of Working
+1. What excites you about working in AI engineering, and why are you interested in this role?
+   I’m excited about working in AI engineering because it creates opportunities to solve real-life problems. For example, in my current work, I built an on-call bot using an LLM integrated with MCP. The bot helps our team quickly troubleshoot frequently occurring on-call issues.
+   I’m particularly interested in this role because I want to continue exploring how LLMs can be integrated into daily workflows to improve productivity. I enjoy experimenting with new AI features and build a tool to solve problems.
+
+2. What do you look for in a strong AI/engineering culture?
+   Good Collaboration and Communication. Engineers, product managers, and designers work closely together. 
+   Experimentation and Innovation. Engineers are allowed to try new ideas
+   Focus on Learning and Improvement. Engineers are encouraged to learn new technologies and skills.
+
+3. How do you usually collaborate with product managers, platform engineers, or data/research teams to deliver AI solutions?
+   Before working on a feature, we will have a discussion with product managers, designers, engineers to understand the requirements and why we need to build the solution
+   we form hypotheses, run experiments, evaluate results, and iterate 
+   
+
+Learning & Problem-Solving
+1. Describe an architectural or engineering concept that has influenced how you
+build AI systems.
+   One engineering concept that has strongly influenced how I build AI systems is context engineering.
+   Context engineering is about giving AI the right information at the right time so it can produce accurate and useful results.
+   With good context, it improves accuracy, reduces hallucinations, reduces token usage and cost.
+
+2. Share an example of how you approached a new or unfamiliar AI problem
+using a systematic, experiment-driven process.
+   One example was when I worked on building a document summarization system that needed to support multilingual content, including English and Malay.
+   Instead of solving everything at once, I divided the problem into smaller parts:
+   - How to process long documents
+   - How to handle mixed languages
+   - How to maintain summary accuracy
+   Before building the full solution, I created assumptions that I wanted to validate, such as:
+   - Splitting documents into chunks with overlap would prevent losing important context
+   - Detecting the dominant language would produce more consistent summaries
+   - Abstractive summarization would produce better readability than extractive summarization
+   I then tested each idea separately.
+   - I experimented with different chunk sizes and overlap lengths
+   - I compared summaries generated with and without language detection
+   - I tested multilingual models versus single-language models
+   I evaluated results
+   - Manual review to check readability and meaning preservation
+   - Latency and token usage to measure performance and cost
+   Based on experiment results, I improved the solution
+   - Cleaning and reducing unnecessary tokens
+   - Optimizing chunk overlap
+
+3. Mention a resource (framework, paper, principle, or tool) that has shaped your
+thinking in AI engineering and explain why.
+   Retrieval-Augmented Generation (RAG) framework. RAG is a design approach where AI models do not rely only on their training knowledge. 
+   Instead, they retrieve relevant information from external data sources (like databases or documents) before generating answers.
+   I learned that LLMs can sometimes generate incorrect or outdated information. RAG helps solve this by grounding the AI response in real, up-to-date data.
+   This changed how I design AI systems — instead of relying only on the model, I focus on building strong retrieval pipelines.
+
+
+Technical Foundations & Experience
+1. Describe your experience deploying AI/ML systems into production. What
+scale (users, requests, or data) did they support?
+   I have experience building and deploying LLM-based application layers, focusing on the components that interact directly with language models such as prepare prompt, retrieve context, evaulate llm output
+
+2. Share examples of the frameworks, libraries, or cloud services you’ve used
+for AI engineering (e.g., PyTorch, Hugging Face, LangChain, vector DBs,
+cloud ML services). What factors influenced your choice?
+  I have mainly worked with LangChain for building LLM applications and LangSmith for tracing, monitoring, and evaluation of AI workflows.
+  I use LangChain because it has strong support for context engineering and prompt management. Besides, it has built-in integrations with vector databases and LLM providers
+  I use Langsmith because it provides visibility into LLM reasoning chains and it makes debugging LLM app much easier
+
+3. Have you worked with multimodal data (e.g., text, audio, images, video)? If
+yes, describe your approach. If not, how would you begin exploring such a
+domain systematically?
+  Yes, I have worked with multimodal data when I built an application that extracts keywords from grocery list images.
+  The goal was to convert information from an image (handwritten or printed grocery list) into structured text that could be used by downstream systems such as search
+  I used a vision-capable LLM to process the image directly.
+  I designed prompts to extract only grocery items
+  I improved performance by experimenting with different prompt structures, output format constraints
+  To ensure quality, I compared extracted keywords against expected grocery items
+
+
+
+Engineering Practices & Decision-Making
+1. How have you applied modern engineering practices (CI/CD, observability,
+testing, cloud-native deployment) in your AI projects?
+   Since LLM systems can be unpredictable, observability is very important. 
+   I use LangSmith for tracing prompt execution, debugging multi-step LLM pipelines, evaluating output quality
+   Test is important to make the app is working as expected. I write unit tests for the application. I perform evaulation testing for LLM output.
+
+
+2. Share a situation where you had to balance accuracy, latency, and cost when
+building an AI feature. What trade-offs did you make?
+   At first, I used a larger, more capable multimodal LLM because it produced very accurate keyword extraction results.
+   However, this created two problems:
+   - Higher latency due to larger model processing time
+   - Higher cost per request
+
+   To control cost, I reduced token usage by cleaning inputs and removing irrelevant context
+   To improve speed, I optimized prompts to be more concise
+
+
+3. What’s your approach to handling the following in AI systems?
+a. a. Technical debt vs. new features
+b. b. Monitoring & observability (what do you monitor at both the system
+and model level, and why?)
+c. c. Application and model security (e.g., handling sensitive data,
+ensuring safe use of models)
+   Balance short-term delivery speed with long-term system stability and scalability. Fix debt immediately if it affects correctness or safety
+   AI systems require monitoring at two layers:
+   - system monitoring - latency, error rates
+   - model monitoring - accuracy, cost 
+   For security, 
+   - only send required data to LLM, 
+   - remove PII before prompts
+   - perform input validation, to detect malicious instructions, to prevent prompt injection
+
+
+
+
+
+
+Operational Excellence
+1. AI systems often require trade-offs between speed, cost, and accuracy. How
+do you define these requirements and ensure they are met in production?
+- Define What Matters Most for the Use Case. For example, when developing customer chatbot, speed is very important
+- Design the System Based on Those Requirements
+- Measure Performance with Metrics. For speed, we can track latency
+- Continuous Monitoring in Production
+- Iterate and Improve
+
+2. What approaches would you use to ensure fault tolerance and resilience in AI-
+driven services (e.g., timeouts, retries, fallbacks)?
+   To ensure fault tolerance and resilience, it is better to set timeout since AI models can sometimes respond slowly.
+   Some failures are temporary, such as network errors or service instability. For this kind of errors, can be mitigated using retries logic
+   Use fallbacks to ensure users still receive useful results even if the main AI model fails. For example, returning cached or previously generated results
+
+3. Share an example (or hypothetical) of how you’d design for scalability in an AI
+application (e.g., batching, caching, horizontal scaling).
+   LLM calls are expensive and slow compared to normal services. To scale efficiently, I would use caching. For example, use semantic caching to reuse results for similar inputs
+   For high-volume workloads, I would batch multiple requests together before sending them to models
+
+4. How do you ensure AI-driven services are production-ready from an
+operational perspective (e.g., API versioning, service contracts, incident
+response, alerting, or defining SLOs/SLIs)?
+   AI outputs can be unpredictable, so I define strict service contracts. For example, I defined structured output formats to make sure LLM generate output in format that I can process
+   I define measurable performance targets to ensure service quality. For example, I track req latency, if latency is below SLO, I will optimize the logic
+   I set alert to detect any malfunctioning of my app. It helps to track my system health
+   AI systems change frequently due to prompt updates, model upgrades. To prevent breaking existing users, I implement versioned APIs.
+
