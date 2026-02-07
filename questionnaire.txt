@@ -134,11 +134,12 @@ driven services (e.g., timeouts, retries, fallbacks)?
 application (e.g., batching, caching, horizontal scaling).
    LLM calls are expensive and slow compared to normal services. To scale efficiently, I would use caching. For example, use semantic caching to reuse results for similar inputs
    For high-volume workloads, I would batch multiple requests together before sending them to models to reduce cost
+   I would also design the system with horizontal scaling. This ensures the application can handle increased traffic without slowing down or failing.
 
 4. How do you ensure AI-driven services are production-ready from an
 operational perspective (e.g., API versioning, service contracts, incident
 response, alerting, or defining SLOs/SLIs)?
-   AI outputs can be unpredictable, so I define strict service contracts. For example, I defined structured output formats to make sure LLM generate output in format that I can process
-   I define measurable performance targets to ensure service quality. For example, I track req latency, if latency is below SLO, I will optimize the logic
+   AI outputs can be unpredictable, so I define strict service contracts. For example, I defined structured output formats to make sure LLM generate output in JSON format that I can process
+   I define measurable performance targets using SLOs and SLIs to maintain service quality. For example, I track req latency, if latency exceeds the defined SLO, I will optimize the logic
    I set alert to detect any malfunctioning of my app. If error rate is more than certain threshold, send alert to engineers to check. It helps to track my system health
    AI systems change frequently due to prompt updates, model upgrades. To prevent breaking existing users, need to implement versioned APIs.
