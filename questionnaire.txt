@@ -78,18 +78,19 @@ Engineering Practices & Decision-Making
 testing, cloud-native deployment) in your AI projects?
    Since LLM systems can be unpredictable, observability is very important. 
    I use LangSmith for tracing prompt execution, debugging multi-step LLM pipelines, evaluating output quality
-   Test is important to make the app is working as expected. I write unit tests for the application. I perform evaulation testing for LLM output.
+   Test is important to make the app is working as expected. I write unit tests for the application. I perform evaluation testing for LLM output.
 
 
 2. Share a situation where you had to balance accuracy, latency, and cost when
 building an AI feature. What trade-offs did you make?
-   At first, I used a larger, more capable multimodal LLM because it produced very accurate keyword extraction results.
+   At first, I used a larger, more capable multimodal LLM because it produced very accurate keyword extraction results for basket builder feature
    However, this created two problems:
    - Higher latency due to larger model processing time
    - Higher cost per request
 
    To control cost, I reduced token usage by cleaning inputs and removing irrelevant context
    To improve speed, I optimized prompts to be more concise
+   Use small model since it does not always require deep reasoning
 
 
 3. What’s your approach to handling the following in AI systems?
@@ -98,11 +99,17 @@ b. b. Monitoring & observability (what do you monitor at both the system
 and model level, and why?)
 c. c. Application and model security (e.g., handling sensitive data,
 ensuring safe use of models)
-   Balance short-term delivery speed with long-term system stability and scalability. Fix debt immediately if it affects correctness or safety
-   AI systems require monitoring at two layers:
+   a. Not all technical debt needs immediate fixing. Fix debt immediately if it affects correctness or safety
+      Set rules to prevent new debt for example strict code review, standardize prompt templates
+   
+   b. AI systems require monitoring at two layers:
    - system monitoring - latency, error rates
-   - model monitoring - accuracy, cost 
-   For security, 
+   - model monitoring - accuracy, cost, hallucinations, harmful responses
+   System monitoring ensures the AI service is reliable, available and maintains good user experience
+   Model monitoring ensures the AI is producing correct, safe, and valuable outputs
+
+
+   c. For security, 
    - only send required data to LLM, 
    - remove PII before prompts
    - perform input validation, to detect malicious instructions, to prevent prompt injection
@@ -111,27 +118,27 @@ ensuring safe use of models)
 Operational Excellence
 1. AI systems often require trade-offs between speed, cost, and accuracy. How
 do you define these requirements and ensure they are met in production?
-- Define What Matters Most for the Use Case. For example, when developing customer chatbot, speed is very important
-- Design the System Based on Those Requirements
-- Measure Performance with Metrics. For speed, we can track latency
-- Continuous Monitoring in Production
-- Iterate and Improve
+- Define what matters most for the use case. For example, when developing customer chatbot, speed is very important
+- Design the system based on those requirements
+- Measure performance with metrics. For speed, we can track latency
+- Continuous monitoring in production
+- Iterate and improve
 
 2. What approaches would you use to ensure fault tolerance and resilience in AI-
 driven services (e.g., timeouts, retries, fallbacks)?
    To ensure fault tolerance and resilience, it is better to set timeout since AI models can sometimes respond slowly.
    Some failures are temporary, such as network errors or service instability. For this kind of errors, can be mitigated using retries logic
-   Use fallbacks to ensure users still receive useful results even if the main AI model fails. For example, returning cached or previously generated results
+   Use fallbacks to ensure users still receive useful results even if the AI model fails. For example, returning cached or previously generated results
 
 3. Share an example (or hypothetical) of how you’d design for scalability in an AI
 application (e.g., batching, caching, horizontal scaling).
    LLM calls are expensive and slow compared to normal services. To scale efficiently, I would use caching. For example, use semantic caching to reuse results for similar inputs
-   For high-volume workloads, I would batch multiple requests together before sending them to models
+   For high-volume workloads, I would batch multiple requests together before sending them to models to reduce cost
 
 4. How do you ensure AI-driven services are production-ready from an
 operational perspective (e.g., API versioning, service contracts, incident
 response, alerting, or defining SLOs/SLIs)?
    AI outputs can be unpredictable, so I define strict service contracts. For example, I defined structured output formats to make sure LLM generate output in format that I can process
    I define measurable performance targets to ensure service quality. For example, I track req latency, if latency is below SLO, I will optimize the logic
-   I set alert to detect any malfunctioning of my app. It helps to track my system health
-   AI systems change frequently due to prompt updates, model upgrades. To prevent breaking existing users, I implement versioned APIs.
+   I set alert to detect any malfunctioning of my app. If error rate is more than certain threshold, send alert to engineers to check. It helps to track my system health
+   AI systems change frequently due to prompt updates, model upgrades. To prevent breaking existing users, need to implement versioned APIs.
