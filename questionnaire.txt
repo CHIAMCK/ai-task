@@ -73,7 +73,6 @@ domain systematically?
   To ensure quality, I compared extracted keywords against expected grocery items
 
 
-
 Engineering Practices & Decision-Making
 1. How have you applied modern engineering practices (CI/CD, observability,
 testing, cloud-native deployment) in your AI projects?
@@ -109,10 +108,6 @@ ensuring safe use of models)
    - perform input validation, to detect malicious instructions, to prevent prompt injection
 
 
-
-
-
-
 Operational Excellence
 1. AI systems often require trade-offs between speed, cost, and accuracy. How
 do you define these requirements and ensure they are met in production?
@@ -140,4 +135,3 @@ response, alerting, or defining SLOs/SLIs)?
    I define measurable performance targets to ensure service quality. For example, I track req latency, if latency is below SLO, I will optimize the logic
    I set alert to detect any malfunctioning of my app. It helps to track my system health
    AI systems change frequently due to prompt updates, model upgrades. To prevent breaking existing users, I implement versioned APIs.
-
